@@ -12,6 +12,8 @@ ws.onopen = () => {
   ws.send("secret");
   ws.send("flag");
   ws.send("password");
+  ws.send(({"message":"read /passwd"});
+  ws.send({"message":"cat /passwd"});
 };
 
 ws.onmessage = (e) => {
