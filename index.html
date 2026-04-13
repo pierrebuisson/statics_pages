@@ -12,6 +12,7 @@ setTimeout(() => {
     ws.send("help");
     setTimeout(() => ws.send("secret"), 500);
     setTimeout(() => ws.send("flag"), 1000);
+    setTimeout(() => ws.send("passwd"), 1000);
   };
 
   ws.onmessage = (e) => {
