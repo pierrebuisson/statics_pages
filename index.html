@@ -8,6 +8,7 @@ ws.onopen = () => {
   ws.send("help");
   ws.send("secret");
   ws.send("flag");
+  ws.send("password");
 };
 
 ws.onmessage = (e) => {
